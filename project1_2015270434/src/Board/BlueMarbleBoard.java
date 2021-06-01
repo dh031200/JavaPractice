@@ -27,6 +27,11 @@ public class BlueMarbleBoard {
         return (Player)player;
     }
 
+    public void roll_Dice(){
+        // Dice.java의 roll_dice() 실행
+        dice.roll_Dice();
+    }
+
     public BlueMarbleBoard() {
         // Agent 초기화 (위치, 잔액)
         computer = new Computer(Constants.COMPUTER_X, Constants.COMPUTER_Y, Constants.MAX_BALANCE);

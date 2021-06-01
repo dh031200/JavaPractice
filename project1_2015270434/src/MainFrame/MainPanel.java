@@ -5,6 +5,8 @@ import Constants.Constants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainPanel extends JPanel {
     public BlueMarbleBoard board;
@@ -19,6 +21,7 @@ public class MainPanel extends JPanel {
         JLabel player_Balance = new JLabel("플레이어 잔액: " + board.getPlayer().getBalance());
         computer_Balance.setFont(Constants.FONT_TYPE);
         roll_dice.setFont(Constants.FONT_TYPE);
+        roll_dice.addActionListener(new ButtonListener());  //ActionListener 추가
         player_Balance.setFont(Constants.FONT_TYPE);
         add(computer_Balance);
         add(roll_dice);
@@ -26,13 +29,22 @@ public class MainPanel extends JPanel {
     }
 
     protected void paintComponent(Graphics g) {
-        //시스템에서 직접호출 하는 그리기 메소드
-        //해당 패널이 들어간 프레임이 보여지면 해당 메소드가 호출됨
+        // 시스템에서 직접호출 하는 그리기 메소드
+        // 해당 패널이 들어간 프레임이 보여지면 해당 메소드가 호출됨
         super.paintComponent(g);
         if (this.board != null) {
             this.board.drawBoard(g);
             this.board.drawAgent(g);
             this.board.drawDice(g);
+        }
+    }
+
+    private class ButtonListener implements ActionListener{
+        // 버튼을 누를 시 BlueMarble의 roll_dice 실행하고 repaint
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            board.roll_Dice();
+            repaint();
         }
     }
 }

@@ -24,4 +24,9 @@ public class Dice {
     public void draw(Graphics g) {
         g.drawImage(images[currentNum-1],x,y,Constants.DICE_WIDTH,Constants.DICE_HEIGHT,null);
     }
+
+    public void roll_Dice(){
+        // currentNum을 1~6 사이 랜덤 숫자로 변경
+        currentNum = (int)(Math.random()*6) + 1;
+    }
 }

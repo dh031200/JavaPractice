@@ -26,7 +26,7 @@ public class Constants {
     public static final int MAX_BALANCE = 1000000;
     public static final int MAINFRAME_WIDTH = 577;
     public static final int MAINFRAME_HEIGHT = 660;
-    public static final String MAINFRAME_TITLE = "BLUE MARBLE";
+    public static final String MAINFRAME_TITLE = "BLUE MARBLE 2015270434_김동훈";
 
     public static final int BOARD_WIDTH = 7;
     public static final int BOARD_HEIGHT = 7;
