@@ -9,8 +9,8 @@ public class MyFrame extends JFrame implements ActionListener {
     private JLabel labelCount;
     private Thread thread;
 
-    public MyFrame(){
-        setSize(200,200);
+    public MyFrame() {
+        setSize(200, 200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Timer");
 
@@ -31,14 +31,13 @@ public class MyFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btnStart){
-            if(thread == null || !thread.isAlive()) {
+        if (e.getSource() == btnStart) {
+            if (thread == null || !thread.isAlive()) {
                 thread = new Thread(new TimerThread(labelCount));
                 thread.start();
             }
-        }
-        else if (e.getSource() == btnReset){
-            if(thread != null && thread.isAlive()){
+        } else if (e.getSource() == btnReset) {
+            if (thread != null && thread.isAlive()) {
                 thread.interrupt();
             }
         }
