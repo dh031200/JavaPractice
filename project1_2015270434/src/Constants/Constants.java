@@ -32,7 +32,7 @@ public class Constants {
     public static final int BOARD_HEIGHT = 7;
 
     public static final int CITY_SIZE = 24;
-    public static final int CITY_COST = 50000;
+    public static final int CITY_COST = 200000;
 //    public static final String[] CITIES = {"시 작", "수 원", "용 인", "익 산", "전 주", "군 산", "무인도",
 //                                           "경 주", "포 항", "대 구", "창 원", "부 산", "무인도",
 //                                           "제 주", "여 수", "광 주", "춘 천", "강 릉", "무인도",
@@ -42,6 +42,8 @@ public class Constants {
                                            "천 안", "창 원", "청 주", "부 산", "무인도", "강 릉",
                                            "춘 천", "광 주", "여 수", "제 주", "무인도"};
 
+    public static final int[][] TILE_SEQ = {{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{1,6},{2,6},{3,6},{4,6},{5,6},{6,6},{6,5},{6,4},{6,3},{6,2},{6,1},{6,0},{5,0},{4,0},{3,0},{2,0},{1,0}};
+//  TILE 이차원 배열에 들어가있는 순서를 진행 순서에 맞춰서 재배열
 
     public static final String DIR_RESOURCE = "src/resource/";
     public static final String DIR_TILE = "tile/";

@@ -6,10 +6,12 @@ import javax.swing.*;
 
 public class MainFrame extends JFrame {
     private MainPanel mainPanel;
+    private Thread thread;
 
     public MainFrame() {
         this.mainPanel = new MainPanel();
         this.add(this.mainPanel);
+
     }
 
     public void init(){
