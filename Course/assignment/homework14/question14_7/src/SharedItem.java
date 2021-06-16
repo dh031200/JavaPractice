@@ -2,15 +2,15 @@ public class SharedItem {
     private int item;
     private boolean isConsumed;
 
-    public SharedItem(){
+    public SharedItem() {
         isConsumed = false;
     }
 
-    public synchronized void put(int item){
-        while(!isConsumed){
-            try{
+    public synchronized void put(int item) {
+        while (!isConsumed) {
+            try {
                 wait();
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -19,11 +19,11 @@ public class SharedItem {
         notify();
     }
 
-    public synchronized int get(){
-        while(isConsumed){
+    public synchronized int get() {
+        while (isConsumed) {
             try {
                 wait();
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

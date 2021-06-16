@@ -87,6 +87,7 @@ public class MainPanel extends JPanel {
 
     public void business(int diceNum, boolean turn) {
         // 사용할 변수 정의
+        String text;
         Agent agent;
         Tile tile;
         int probOfPurchase;
@@ -95,12 +96,14 @@ public class MainPanel extends JPanel {
         Constants.CITY_STATE cityState;
         // agent 판별 및 변수 초기화
         if (turn) {
+            text = "플레이어";
             agent = board.getPlayer();
             probOfPurchase = 10;
             tileType = Constants.TILE_TYPE.player;
             cityState = Constants.CITY_STATE.owned_by_player;
             jlabel = player_Balance;
         } else {
+            text = "컴퓨터";
             agent = board.getComputer();
             probOfPurchase = (int)(Math.random()*10) + 1;
             tileType = Constants.TILE_TYPE.computer;
@@ -112,7 +115,7 @@ public class MainPanel extends JPanel {
         tile = board.getTileMap(Constants.TILE_SEQ[agent.getTile()][0], Constants.TILE_SEQ[agent.getTile()][1]);
 //        System.out.println(tile.getCity().getCityState());  // cityState 확인용
         if (tile.getTileType() == Constants.TILE_TYPE.free) {
-        if(probOfPurchase > 5) {    // 랜덤 난수가 5보다 클경우 (플레이어는 무조건 10) (컴퓨터는 1 ~ 10)
+            if(probOfPurchase > 5) {    // 랜덤 난수가 5보다 클경우 (플레이어는 무조건 10) (컴퓨터는 1 ~ 10)
                 if(agent.getBalance() >= Constants.CITY_COST) { // 잔액이 부족한 경우 타일 구매 안함.
                     tile.setTileType(tileType);
                     City city = tile.getCity();
@@ -122,7 +125,7 @@ public class MainPanel extends JPanel {
             }
         }
         repaint();  // 구매 후 repaint 및 잔액 새로고침
-        jlabel.setText(agent.getBalance()+"");
+        jlabel.setText(text + " 잔액: " + agent.getBalance());
     }
 
     private class ButtonListener implements ActionListener {
