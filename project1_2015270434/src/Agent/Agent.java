@@ -8,7 +8,9 @@ public abstract class Agent {
     protected Image image;
     protected int balance;
     protected int tile;
-    public void draw(Graphics g){
+    protected boolean island;   // 무인도 판별을 위함
+
+    public void draw(Graphics g) {
     }
 
     public int getX() {
@@ -41,5 +43,13 @@ public abstract class Agent {
 
     public void setBalance(int balance) {
         this.balance = balance;
+    }
+
+    public boolean isIsland() {
+        return island;
+    }
+
+    public void setIsland(boolean island) {
+        this.island = island;
     }
 }

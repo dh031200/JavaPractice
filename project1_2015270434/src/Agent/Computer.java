@@ -13,16 +13,17 @@ public class Computer extends Agent {
         this.y = y;
         this.balance = balance;
         // 이미지 불러오기
-        this.image = new ImageIcon (Constants.DIR_RESOURCE + Constants.DIR_AGENT+"COMPUTER.png").getImage();
+        this.image = new ImageIcon(Constants.DIR_RESOURCE + Constants.DIR_AGENT + "COMPUTER.png").getImage();
+        this.island = false;
     }
 
-    public int getBalance(){
+    public int getBalance() {
         // 잔액 반환
         return this.balance;
     }
 
-    public void draw(Graphics g){
+    public void draw(Graphics g) {
         // Computer image draw
-        g.drawImage(image,x,y,Constants.AGENT_WIDTH,Constants.AGENT_HEIGHT,null);
+        g.drawImage(image, x, y, Constants.AGENT_WIDTH, Constants.AGENT_HEIGHT, null);
     }
 }

@@ -17,11 +17,15 @@ public class City {
         return cityState;
     }
 
+    public String getCityName() {
+        return cityName;
+    }
+
     public void setCityState(Constants.CITY_STATE cityState) {
         this.cityState = cityState;
     }
 
-    public String toString(){
+    public String toString() {
         // city의 이름 가져오기 위한 오버라이딩
         return cityName;
     }

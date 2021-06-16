@@ -13,25 +13,25 @@ import java.awt.event.ActionListener;
 
 public class MainPanel extends JPanel {
     public BlueMarbleBoard board;
-    public JLabel computer_Balance;
-    public JLabel player_Balance;
+    public JLabel computer_info;
+    public JLabel player_info;
+    public JButton roll_dice;
 
     public MainPanel() {
         this.board = new BlueMarbleBoard();
 
-//        this.setLayout(Layout);
         setLayout(new FlowLayout(FlowLayout.CENTER, 40, 20));
         // board의 멤버 변수(compuer, player)로 부터 잔액을 가져옴
-        this.computer_Balance = new JLabel("컴퓨터 잔액: " + board.getComputer().getBalance());
-        JButton roll_dice = new JButton("주사위 굴리기");
-        this.player_Balance = new JLabel("플레이어 잔액: " + board.getPlayer().getBalance());
-        computer_Balance.setFont(Constants.FONT_TYPE);
+        this.computer_info = new JLabel("컴퓨터 잔액: " + board.getComputer().getBalance());
+        roll_dice = new JButton("주사위 굴리기");
+        this.player_info = new JLabel("플레이어 잔액: " + board.getPlayer().getBalance());
+        computer_info.setFont(Constants.FONT_TYPE);
         roll_dice.setFont(Constants.FONT_TYPE);
         roll_dice.addActionListener(new ButtonListener());  //ActionListener 추가
-        player_Balance.setFont(Constants.FONT_TYPE);
-        add(computer_Balance);
+        player_info.setFont(Constants.FONT_TYPE);
+        add(computer_info);
         add(roll_dice);
-        add(player_Balance);
+        add(player_info);
     }
 
     protected void paintComponent(Graphics g) {
@@ -63,9 +63,9 @@ public class MainPanel extends JPanel {
             minX = Constants.COMPUTER_X;
             minY = Constants.COMPUTER_Y;
         }
-        int roundGold = agent.getTile()+diceNum;        // 타일 번호를 불러오고 한바퀴 돌았을 시 잔액 20만원 추가
+        int roundGold = agent.getTile() + diceNum;        // 타일 번호를 불러오고 한바퀴 돌았을 시 잔액 20만원 추가
         if (roundGold > 23)
-            agent.setBalance(agent.getBalance()+200000);
+            agent.setBalance(agent.getBalance() + 200000);
         agent.setTile((agent.getTile() + diceNum) % 24);
 
         maxX = minX + (Constants.BOARD_WIDTH - 1) * Constants.TILE_WIDTH;
@@ -85,47 +85,54 @@ public class MainPanel extends JPanel {
 
     }
 
-    public void business(int diceNum, boolean turn) {
+    public void business(boolean turn) {
         // 사용할 변수 정의
-        String text;
         Agent agent;
+        Agent enemy;
         Tile tile;
         int probOfPurchase;
-        JLabel jlabel;
         Constants.TILE_TYPE tileType;
         Constants.CITY_STATE cityState;
+        Constants.CITY_STATE enemy_tile;
+
         // agent 판별 및 변수 초기화
         if (turn) {
-            text = "플레이어";
             agent = board.getPlayer();
+            enemy = board.getComputer();
             probOfPurchase = 10;
             tileType = Constants.TILE_TYPE.player;
             cityState = Constants.CITY_STATE.owned_by_player;
-            jlabel = player_Balance;
+            enemy_tile = Constants.CITY_STATE.owned_by_computer;
         } else {
-            text = "컴퓨터";
             agent = board.getComputer();
-            probOfPurchase = (int)(Math.random()*10) + 1;
+            enemy = board.getPlayer();
+            probOfPurchase = (int) (Math.random() * 10) + 1;
             tileType = Constants.TILE_TYPE.computer;
             cityState = Constants.CITY_STATE.owned_by_computer;
-            jlabel = computer_Balance;
+            enemy_tile = Constants.CITY_STATE.owned_by_player;
         }
         // 타일 번호에 따라 타일 판별 후 빈 도시일 경우 컴퓨터는 50%, 플레이어는 100% 확률로 타일을 구매함.
 //        System.out.println(agent.getTile()); //타일 번호 확인용
         tile = board.getTileMap(Constants.TILE_SEQ[agent.getTile()][0], Constants.TILE_SEQ[agent.getTile()][1]);
 //        System.out.println(tile.getCity().getCityState());  // cityState 확인용
         if (tile.getTileType() == Constants.TILE_TYPE.free) {
-            if(probOfPurchase > 5) {    // 랜덤 난수가 5보다 클경우 (플레이어는 무조건 10) (컴퓨터는 1 ~ 10)
-                if(agent.getBalance() >= Constants.CITY_COST) { // 잔액이 부족한 경우 타일 구매 안함.
+            if (probOfPurchase > 5) {    // 랜덤 난수가 5보다 클경우 (플레이어는 무조건 10) (컴퓨터는 1 ~ 10)
+                if (agent.getBalance() >= Constants.CITY_COST) { // 잔액이 부족한 경우 타일 구매 안함.
                     tile.setTileType(tileType);
                     City city = tile.getCity();
                     city.setCityState(cityState);
                     agent.setBalance(agent.getBalance() - 200000);
                 }
             }
+        } else if (tile.getTileType() == Constants.TILE_TYPE.island) {      // 도착 도시가 무인도면 agent의 island를 true로
+            agent.setIsland(true);
+        } else if (tile.getCity().getCityState() == enemy_tile) {           // 도착 도시가 상대방 타일일 경우 내 잔액에서 상대에게 10만원을 줌
+            agent.setBalance(agent.getBalance() - 100000);
+            enemy.setBalance(enemy.getBalance() + 100000);
         }
+        computer_info.setText("컴퓨터 잔액: " + board.getComputer().getBalance());
+        player_info.setText("플레이어 잔액: " + board.getPlayer().getBalance());
         repaint();  // 구매 후 repaint 및 잔액 새로고침
-        jlabel.setText(text + " 잔액: " + agent.getBalance());
     }
 
     private class ButtonListener implements ActionListener {
@@ -135,9 +142,47 @@ public class MainPanel extends JPanel {
             repaint();
             int diceNum = board.roll_Dice();
             boolean turn = board.getTurn();
+            Agent agent;
             moveAgent(diceNum, turn);
-            business(diceNum, turn);
+            business(turn);
 
+            while (true) {      // 상대가 무인도에 있을시 턴 넘김    무인도-무인도의 경우 해결을 위해
+                if (!turn)      //                               상대방이 무인도에 없을 때 까지 반복
+                    agent = board.getPlayer();
+                else
+                    agent = board.getComputer();
+                if (agent.isIsland()) {             // 현재 주사위 굴린 agent 기준 상대가 무인도에 있는지 체크
+                    turn = !turn;           // 턴넘기기
+                    board.setTurn(turn);    // 보드의 턴 세팅
+                    agent.setIsland(false);     // 무인도 탈출
+                } else
+                    break;
+            }
+            if (board.checkEnd()) {     // 게임 끝났는지 여부 확인
+                roll_dice.setEnabled(false);        // 주사위 던지기 비활성화
+                roll_dice.setText("게임 종료");
+                int count_C = 0;
+                int count_P = 0;
+                for (City city : board.getCityList()) {     // 모든 도시를 돌며 소유권 확인 후 개수 카운트
+                    if (city.getCityState() == Constants.CITY_STATE.owned_by_player)
+                        count_P += 1;
+                    else if (city.getCityState() == Constants.CITY_STATE.owned_by_computer)
+                        count_C += 1;
+                }
+                count_P = count_P * 100000 + board.getPlayer().getBalance();        // 소유 도시 개수 * 100000 + 현재 잔액
+                count_C = count_C * 100000 + board.getComputer().getBalance();
+                player_info.setText("플레이어 결과: " + count_P);
+                computer_info.setText("컴퓨터 결과: " + count_C);
+                computer_info.setForeground(Color.RED);     // 컴퓨터와 플레이어 글씨 빨갛게 바꿈
+                player_info.setForeground(Color.RED);
+                if (count_P > count_C) {            // 결과 점수가 더 낮은 플레이어 색상을 파랗게
+                    computer_info.setForeground(Color.BLUE);
+                } else if (count_C > count_P)
+                    player_info.setForeground(Color.BLUE);
+                computer_info.setFont(Constants.END_FONT);      // 볼드 적용
+                player_info.setFont(Constants.END_FONT);
+
+            }
         }
     }
 }

@@ -38,8 +38,26 @@ public class BlueMarbleBoard {
         return dice.roll_Dice();
     }
 
-    public boolean getTurn(){
+    public boolean getTurn() {
         return turn;
+    }
+
+    public void setTurn(boolean turn) {
+        this.turn = turn;
+    }
+
+    public City[] getCityList() {
+        return cityList;
+    }
+
+    public boolean checkEnd() {      //모든 도시의 소유 여부를 확인(free가 있는지)(무인도와 시작은 제외)
+        for (City city : cityList) {
+            if (city.getCityName().equals("무인도") || city.getCityName().equals("시 작")) {
+            } else if (city.getCityState() == Constants.CITY_STATE.free) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public BlueMarbleBoard() {
@@ -124,9 +142,5 @@ public class BlueMarbleBoard {
     public void drawDice(Graphics g) {
         dice.draw(g);
         // 주사위 그리기 메소드
-    }
-
-    public void rePaint(Graphics g){
-
     }
 }
